@@ -247,7 +247,7 @@ nav{padding:0px 0}
 .success-icon i{font-size:30px}
 .success-card h1{font-size:1.5rem}
 /* BALANCED MOBILE STYLES FOR APP BADGES - VERY SMALL SCREENS */
-.app-badges{gap:8px}
+.app-badges{gap:15px}
 .app-badge{padding:8px 14px;gap:8px}
 .app-badge i{font-size:1.3rem}
 .app-badge small{font-size:0.55rem}
