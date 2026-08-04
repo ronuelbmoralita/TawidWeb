@@ -34,7 +34,7 @@ nav{display:flex;justify-content:space-between;align-items:center;padding:20px 0
 .hero p{font-size:1.15rem;max-width:720px;margin:0 auto 24px;color:rgba(26,26,26,0.85)}
 .hero strong{font-size:1.3rem}
 .hero-note{margin-top:16px;font-size:1rem}
-.app-badges{display:flex;justify-content:center;gap:20px;flex-wrap:wrap}
+.app-badges{display:flex;justify-content:center;gap:20px;flex-wrap:nowrap}
 .app-badge{display:flex;align-items:center;gap:14px;background:var(--glass-bg);backdrop-filter:blur(var(--glass-blur));-webkit-backdrop-filter:blur(var(--glass-blur));padding:14px 24px;border-radius:16px;border:1px solid var(--glass-border);text-decoration:none;color:var(--black);font-weight:600;transition:all 0.4s cubic-bezier(0.34,1.56,0.64,1);opacity:0.7;cursor:pointer;position:relative;overflow:hidden}
 .app-badge::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(64,224,208,0.1) 0%,transparent 70%);opacity:0;transition:opacity 0.5s ease;transform:scale(0.5)}
 .app-badge:hover::before{opacity:1;transform:scale(1)}
