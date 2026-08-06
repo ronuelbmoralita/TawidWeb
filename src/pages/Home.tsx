@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import welcomeSvg from '../assets/passenger.svg'
 
 function Home() {
   useEffect(() => {
@@ -15,10 +16,12 @@ function Home() {
   }, [])
 
   const scrollToContacts = () => {
-    window.location.hash = '#/'
-    setTimeout(() => {
-      document.querySelector('#contacts')?.scrollIntoView({ behavior: 'smooth' })
-    }, 100)
+    const element = document.querySelector('#contacts')
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      window.location.hash = '#contacts'
+    }
   }
 
   return (
@@ -42,15 +45,35 @@ function Home() {
         {/* HERO */}
         <section className="hero" id="home">
           <div className="container">
-            <h1>Sigurado Ka Sa Bawat Tawid Mo</h1>
-            <p>A cost-efficient digital system for municipal ports that provides real-time schedules, travel updates, and support for walk-in or cashless bookings.</p>
-            <div className="app-badges">
-              <a className="app-badge disabled"><i className="fab fa-google-play"></i><div><small>COMING SOON</small>Google Play</div></a>
-              <a className="app-badge disabled"><i className="fab fa-app-store"></i><div><small>COMING SOON</small>App Store</div></a>
+            <div className="hero-flex">
+              <div className="hero-text">
+                <h1>Sigurado Ka Sa Bawat Tawid Mo</h1>
+                <p>
+                  Stop guessing ferry times and relying on outdated posts. Get live schedules, sea advisories, and instant port updates right on your phone.
+                </p>
+                <div className="app-badges">
+                  <a className="app-badge disabled">
+                    <i className="fab fa-google-play"></i>
+                    <div>
+                      <small>COMING SOON</small>Google Play
+                    </div>
+                  </a>
+                  <a className="app-badge disabled">
+                    <i className="fab fa-app-store"></i>
+                    <div>
+                      <small>COMING SOON</small>App Store
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <img
+                src={welcomeSvg}
+                alt="Welcome aboard"
+                className="hero-illustration"
+              />
             </div>
           </div>
         </section>
-
         {/* FEATURES */}
         <section className="section" id="features">
           <div className="container">
@@ -119,10 +142,10 @@ function Home() {
                   <hr />
                   <ul>
                     {['Queue at the counter', 'Cash payment', 'Available on all routes', 'No app required'].map((text, i) => (
-                      <li key={i}><i className="fas fa-check-circle"></i> {text}</li>
+                      <li key={`basic-pro-${i}`}><i className="fas fa-check-circle"></i> {text}</li>
                     ))}
                     {['No seat guarantee', 'No digital receipt', 'Longer wait times possible'].map((text, i) => (
-                      <li key={i + 4} className="no"><i className="fas fa-times-circle"></i> {text}</li>
+                      <li key={`basic-con-${i}`} className="no"><i className="fas fa-times-circle"></i> {text}</li>
                     ))}
                   </ul>
                 </div>
@@ -134,7 +157,7 @@ function Home() {
                   <hr />
                   <ul>
                     {['Board directly. Skip the line', 'Cashless payment (GCash, Maya)', 'Digital receipt', 'Guaranteed seat', 'Advance booking anytime', 'Transaction history', 'QR code ticket'].map((text, i) => (
-                      <li key={i}><i className={`fas ${['fa-forward', 'fa-wallet', 'fa-receipt', 'fa-chair', 'fa-calendar-check', 'fa-history', 'fa-qrcode'][i]}`}></i> {text}</li>
+                      <li key={`premium-pro-${i}`}><i className={`fas ${['fa-forward', 'fa-wallet', 'fa-receipt', 'fa-chair', 'fa-calendar-check', 'fa-history', 'fa-qrcode'][i]}`}></i> {text}</li>
                     ))}
                   </ul>
                 </div>
@@ -148,21 +171,32 @@ function Home() {
         <section className="section" id="partnership">
           <div className="container">
             <div className="panel fade-up">
-              <div className="section-title"><h2>LGU Partnership</h2><p>Built for municipal ports. Simple to adopt, easy to run. No complicated procurement required.</p></div>
-              <div style={{ background: 'linear-gradient(135deg, #006d65, #40E0D0)', color: 'white', padding: '20px 28px', borderRadius: '16px', textAlign: 'center', marginBottom: '32px', boxShadow: '0 4px 20px rgba(0,109,101,0.2)' }}>
+              <div className="section-title">
+                <h2>LGU Partnership</h2>
+                <p>
+                  No complex procurement processes, no extra hardware needed—just a flexible, smartphone-and-QR-powered digital system to modernize your municipal port operations.
+                </p>
+              </div>
+
+              {/* Zero Cost Banner */}
+              <div style={{
+                background: 'linear-gradient(135deg, #006d65, #40E0D0)',
+                color: 'white',
+                padding: '24px 28px',
+                borderRadius: '16px',
+                textAlign: 'center',
+                marginBottom: '40px',
+                boxShadow: '0 4px 20px rgba(0,109,101,0.2)'
+              }}>
                 <p style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '4px', letterSpacing: '-0.01em' }}>
                   <i className="fas fa-gem" style={{ marginRight: '12px' }}></i>Zero Cost for LGUs
                 </p>
-                <p style={{ fontSize: '1rem', opacity: 0.92, margin: 0 }}>₱0 setup · ₱0 monthly · <strong style={{ fontWeight: 700 }}>100% free</strong> for municipal ports</p>
+                <p style={{ fontSize: '1rem', opacity: 0.92, margin: 0 }}>
+                  ₱0 setup · ₱0 monthly · <strong style={{ fontWeight: 700 }}>100% free</strong> for municipal ports
+                </p>
               </div>
-              <div className="pills brand-pills">
-                {['Simple Adoption', 'Community-First', 'Centralized Operations'].map((text, idx) => (
-                  <div className="pill" key={idx}>
-                    <i className={`fas ${['fa-building', 'fa-hand-holding-heart', 'fa-chart-simple'][idx]}`}></i>
-                    <div><strong>{text}</strong><span>{['No complicated procurement needed', 'Built for municipal ports', 'Full visibility of all transactions'][idx]}</span></div>
-                  </div>
-                ))}
-              </div>
+
+              {/* Features Grid */}
               <div className="grid-3">
                 {[
                   { icon: 'fa-calendar-alt', title: 'Real-time Schedule Management', desc: 'Update trips and monitor daily schedules live.' },
@@ -179,12 +213,16 @@ function Home() {
                   </div>
                 ))}
               </div>
-              <div style={{ marginTop: '28px', padding: '16px 20px', textAlign: 'center', borderTop: '1px solid rgba(0,109,101,0.1)' }}>
+
+              {/* CTA */}
+              <div style={{ marginTop: '32px', padding: '16px 20px', textAlign: 'center', borderTop: '1px solid rgba(0,109,101,0.1)' }}>
                 <p style={{ fontSize: '0.9rem', color: '#006d65', fontWeight: 500, margin: 0 }}>
                   <i className="fas fa-arrow-right" style={{ marginRight: '8px' }}></i>
                   Ready to partner?{' '}
-                  <span onClick={scrollToContacts} style={{ color: '#006d65', fontWeight: 700, textDecoration: 'underline', textUnderlineOffset: '2px', cursor: 'pointer' }}>Contact us</span>{' '}
-                  to get started
+                  <span onClick={scrollToContacts} style={{ color: '#006d65', fontWeight: 700, textDecoration: 'underline', textUnderlineOffset: '2px', cursor: 'pointer' }}>
+                    Contact us
+                  </span>{' '}
+                  to get started.
                 </p>
               </div>
             </div>

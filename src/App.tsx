@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'  // ← Palitan ang BrowserRouter → HashRouter
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import Home from './pages/Home'
@@ -7,10 +7,9 @@ import Terms from './pages/Terms'
 import Delete from './pages/Delete'
 import Success from './pages/Success'
 
-
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>  {/* ← Palitan ang BrowserRouter → HashRouter */}
       <Navbar />
       <main>
         <Routes>
@@ -22,7 +21,7 @@ function App() {
         </Routes>
       </main>
       <Footer />
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 

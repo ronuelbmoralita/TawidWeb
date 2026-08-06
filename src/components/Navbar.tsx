@@ -41,6 +41,7 @@ function Navbar() {
     { name: 'Features', hash: '#features' },
     { name: 'Booking', hash: '#booking' },
     { name: 'Pricing', hash: '#pricing' },
+    { name: 'Partnership', hash: '#partnership' },  // ← IDINAGDAG
     { name: 'About', hash: '#about' },
     { name: 'Contacts', hash: '#contacts' },
   ]
@@ -73,9 +74,6 @@ function Navbar() {
                   {link.name}
                 </Link>
               ))}
-              <Link to="/privacy" onClick={close}>Privacy</Link>
-              <Link to="/terms" onClick={close}>Terms</Link>
-              <Link to="/delete" onClick={close}>Delete</Link>
             </div>
           </div>
         </nav>
