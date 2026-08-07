@@ -220,14 +220,14 @@ nav {
 .hero {
   width: 100%;
   background-color: #FFFFFF;
-  /* Adding shadow only at the bottom */
-  box-shadow: 0 10px 11px rgba(0, 0, 0, 0.05);
-
   /* Optional: Ensures the shadow stays visible over adjacent sections */
   position: relative;
   z-index: 10;
-  padding-top: 80px;
-  padding-bottom: 80px;
+  /*padding-top: 30px;
+  padding-bottom: 30px;
+  Adding shadow only at the bottom 
+  box-shadow: 0 10px 11px rgba(0, 0, 0, 0.05);
+  */
 }
 
 .hero-flex {
@@ -245,34 +245,31 @@ nav {
   animation: heroFadeUp 0.7s ease both;
 }
 
-/* 1. Ang wrapper ang magsisilbing circular mask */
+/* I-adjust ang padding ng wrapper para lumitaw na mas maliit ang image */
 .hero-illustration-wrapper {
-  width: 350px;
-  height: 350px;
+  width: 300px;
+  height: 300px;
   border-radius: 50%;
-
-  /* Idagdag ito para lumabas ang border */
-  border-style: solid;
-  border-width: 0.5px;
-  border-color: var(--brand);
-
   overflow: hidden;
-  background: var(--brand-20);
+  background-color: var(--brand-20);
 
   display: flex;
   justify-content: center;
   align-items: flex-end;
   flex-shrink: 0;
+
+  /* Magdagdag ng space sa loob para lumilit ang lalabas na imahe */
+  padding: 20px;
+  box-sizing: border-box;
+  /* Mahalaga ito para manatiling EXACT 350px ang total wrapper size */
 }
 
-/* 2. Ang image sa loob */
 .hero-illustration {
   display: block;
-  width: 90%;
+  width: 100%;
   height: auto;
   object-fit: contain;
 
-  margin-bottom: -15px;
   animation: heroSlideLeft 0.9s ease both;
   animation-delay: 0.2s;
 }
@@ -290,52 +287,6 @@ nav {
   max-width: 480px;
   margin: 0 0 28px;
   color: rgba(26, 26, 26, 0.8);
-}
-
-/* ===== SCROLL DOWN ARROW ===== */
-.scroll-down {
-  position: absolute;
-  bottom: 5px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  animation: bounceDown 1.8s infinite;
-}
-
-.scroll-down span {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--gray);
-}
-
-.scroll-down i {
-  font-size: 1.4rem;
-  color: var(--brand);
-}
-
-@keyframes bounceDown {
-
-  0%,
-  20%,
-  50%,
-  80%,
-  100% {
-    transform: translateX(-50%) translateY(0);
-  }
-
-  40% {
-    transform: translateX(-50%) translateY(10px);
-  }
-
-  60% {
-    transform: translateX(-50%) translateY(5px);
-  }
 }
 
 /* ===== HERO ENTRANCE ANIMATION ===== */
@@ -399,62 +350,35 @@ nav {
 }
 
 @media (max-width: 768px) {
-
-  /* Grid layout para mauna ang image sa taas at text sa ibaba */
   .hero-flex {
-    display: grid !important;
-    grid-template-areas:
-      "image"
-      "text";
-    gap: 24px;
-    justify-items: center;
-    /* I-ge-gitna ang mismong grid children */
-    text-align: center;
-    /* I-ge-gitna ang mga teksto */
-  }
-
-  .hero-text {
-    grid-area: text;
-    width: 100%;
-    max-width: 100%;
-    display: flex;
     flex-direction: column;
-    align-items: center;
-    /* Center-align para sa flex children ng hero-text */
+    gap: 24px;
     text-align: center;
   }
 
-  .hero-text p {
-    margin-left: auto;
-    margin-right: auto;
+  .hero-flex .hero-text {
+    max-width: 100%;
+    text-align: center;
   }
 
-  /* Para maging nasa gitna ang Google Play at App Store badges */
-  .app-badges {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    width: 100%;
-  }
-
+  /* --- BAGONG ADJUSTMENT SA WRAPPER SA TABLET/MOBILE --- */
   .hero-illustration-wrapper {
-    grid-area: image;
     width: 260px;
+    /* Nilagyan ng mas maliit na laki mula 350px */
     height: 260px;
     padding: 15px;
+    /* Binawasan ang padding para sakto pa rin ang image */
     margin: 0 auto;
+    /* Para centered sa screen sa mobile layout */
   }
 
   .hero-illustration {
     width: 100%;
-    height: auto;
-  }
+    /* Susunod sa 260px ng wrapper */
+ }
 
   .hero h1 {
     font-size: 2.2rem;
-    text-align: center;
   }
 }
 
@@ -1240,10 +1164,9 @@ footer {
   display: flex;
   flex-direction: column;
   gap: 60px;
-  /* Consistent gap between all sections, desktop + mobile 
-  padding-top: 40px;
-  */
+  /* Consistent gap between all sections, desktop + mobile */
   padding-bottom: 60px;
+  padding-top: 40px;
 }
 
 .wave-bg svg {
@@ -1485,7 +1408,6 @@ footer {
     height: 220px;
     padding: 12px;
   }
-
   .panel {
     padding: 24px 16px;
     width: 97%;
