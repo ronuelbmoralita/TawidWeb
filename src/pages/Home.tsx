@@ -115,32 +115,64 @@ function Home() {
             <div className="panel fade-up">
               <div className="section-title">
                 <h2>Pricing for Passengers</h2>
-                <p>Walk-in free. Optional ₱7 fee for online booking.</p>
+                <p>No hidden charges for walk-ins. Small convenience fee for online booking.</p>
               </div>
+              
               <div className="pricing-row">
+                {/* WALK-IN CARD */}
                 <div className="item price-card">
-                  <h3>Basic</h3>
-                  <p className="price">₱0</p>
-                  <p className="price-sub">/ trip (walk-in)</p>
+                  <h3>Walk-In</h3>
+                  <p className="price">Standard Fare Only</p>
+                  <p className="price-sub">Pay regular ticket price at port counter</p>
                   <hr />
                   <ul>
-                    {['Queue at the counter', 'Cash payment', 'Available on all routes', 'No app required'].map(t => <li key={t}><i className="fas fa-check-circle"></i> {t}</li>)}
-                    {['No seat guarantee', 'No digital receipt', 'Longer wait times'].map(t => <li key={t} className="no"><i className="fas fa-times-circle"></i> {t}</li>)}
+                    {[
+                      'Queue at the ticket counter',
+                      'Cash payment only',
+                      'Available on all active routes',
+                      'No smartphone or app required'
+                    ].map(t => (
+                      <li key={t}><i className="fas fa-check-circle"></i> {t}</li>
+                    ))}
+                    {[
+                      'No seat guarantee ahead of time',
+                      'No digital receipt / SMS ticket',
+                      'Longer wait times during peak hours'
+                    ].map(t => (
+                      <li key={t} className="no"><i className="fas fa-times-circle"></i> {t}</li>
+                    ))}
                   </ul>
                 </div>
+
+                {/* ONLINE BOOKING CARD */}
                 <div className="item price-card price-premium">
-                  <h3>Premium</h3>
-                  <p className="price">₱7</p>
-                  <p className="price-sub">/ booking (online)</p>
+                  <h3>Online Booking</h3>
+                  <p className="price">Standard Fare + 1.7%</p>
+                  <p className="price-sub">Convenience fee for digital ticketing</p>
                   <p className="price-note"><i className="fas fa-info-circle"></i> Available after port activation</p>
                   <hr />
                   <ul>
-                    {[['fa-forward', 'Skip the line'], ['fa-wallet', 'Cashless (GCash/Maya)'], ['fa-receipt', 'Digital receipt'], ['fa-chair', 'Guaranteed seat'], ['fa-calendar-check', 'Advance booking'], ['fa-history', 'Transaction history'], ['fa-qrcode', 'QR code ticket']].map(([i, t]) => (
-                      <li key={t}><i className={`fas ${i}`}></i> {t}</li>
+                    {[
+                      ['fa-forward', 'Skip the counter line'],
+                      ['fa-wallet', 'Cashless payment (GCash / Maya)'],
+                      ['fa-receipt', 'Instant digital receipt'],
+                      ['fa-leaf', '100% Paperless & Eco-friendly'], // IDINAGDAG DITO
+                      ['fa-chair', 'Guaranteed seat allocation'],
+                      ['fa-calendar-check', 'Advance trip reservation'],
+                      ['fa-qrcode', 'QR code mobile ticket']
+                    ].map(([icon, text]) => (
+                      <li key={text}><i className={`fas ${icon}`}></i> {text}</li>
                     ))}
                   </ul>
                 </div>
               </div>
+
+              {/* CARBON FOOTPRINT / ECO-NOTE BANNER */}
+              <div className="note-dark" style={{ marginTop: 24, padding: '14px 20px', textAlign: 'center' }}>
+                <i className="fas fa-leaf" style={{ color: '#2ecc71', marginRight: 8 }}></i>
+                <strong>Go paperless, save trees.</strong> Digital QR tickets help reduce paper waste and lower our carbon footprint with every trip.
+              </div>
+
             </div>
           </div>
         </section>
