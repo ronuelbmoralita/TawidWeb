@@ -312,4 +312,12 @@
 /* ── ≥769px ─────────────────────────────────────────────── */
 @media (min-width: 769px) {
   .btn-wa { display: none; }
+
+  /* Watermark ng 01 at 03: nasa kanang dulo ng text column (kaliwa),
+     para pareho ng 02 at 04 na nasa kanang dulo ng text column nila.
+     54.545% = 1.2fr / (1.2fr + 1fr). Ang 24px ay kompensasyon sa padding at gap. */
+  .feature-row:not(.feature-row--reverse) .feature-row__watermark {
+    left: calc(54.545% - 24px);
+    transform: translate(-100%, -50%);
+  }
 }
