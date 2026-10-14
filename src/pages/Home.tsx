@@ -1,27 +1,108 @@
 import { useEffect } from 'react'
 import welcomeSvg from '../assets/passenger.svg'
+import {
+  FEATURES,
+  LGU_FEATURES,
+  ROADMAP,
+  ABOUT_TAGS,
+  ABOUT_PARAS
+} from './HomeFunc'
 
-const FEATURES = [
-  { num: '01', icon: 'fa-calendar-alt', title: 'Real‑Time Schedule', desc: 'Live trip schedule, vessel name, and sailing status — no more checking social media.' },
-  { num: '02', icon: 'fa-exclamation-triangle', title: 'Port Advisory System', desc: 'Automatic sea condition (Calm to Very Rough) with actual wave height.' },
-  { num: '03', icon: 'fa-bell', title: 'Departure Notifications', desc: 'Reminder 30 minutes before departure so you never miss your boat.' }
-]
+function SectionHead({ title, sub }: { title: string; sub?: string }) {
+  return (
+    <div className="section-head">
+      <h2 className="section-head__title">{title}</h2>
+      <span className="section-head__line" aria-hidden="true" />
+      {sub && <p className="section-head__sub">{sub}</p>}
+    </div>
+  )
+}
 
-const LGU_FEATURES = [
-  { icon: 'fa-calendar-alt', title: 'Real-time Schedule', desc: 'Update and monitor trips live.' },
-  { icon: 'fa-water', title: 'Sea Condition Advisory', desc: 'Automatic marine weather + wave height.' },
-  { icon: 'fa-users', title: 'Passenger Info System', desc: 'Accurate live updates for travelers.' },
-  { icon: 'fa-map-marked-alt', title: 'Route Directory', desc: 'Manage all registered routes.' },
-  { icon: 'fa-qrcode', title: 'Free QR Scanner', desc: 'Free scanner app for conductors.' },
-  { icon: 'fa-chart-pie', title: 'Unified Dashboard', desc: 'Cash + cashless in one view.' }
-]
-
-function Home() {
+export default function Home() {
   useEffect(() => {
-    const obs = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('show')), { threshold: 0.1 })
-    document.querySelectorAll('.fade-up').forEach(el => obs.observe(el))
-    return () => obs.disconnect()
-  }, [])
+  // ── Observer for fade-up panels ────────────────────────
+  const panelObs = new IntersectionObserver(
+    es => es.forEach(e => e.isIntersecting && e.target.classList.add('show')),
+    { threshold: 0.1 }
+  )
+  document.querySelectorAll('.fade-up').forEach(el => panelObs.observe(el))
+
+  // ── Measure marker positions para sa track line ────────
+  const measureTrack = () => {
+    const timeline = document.querySelector('.timeline') as HTMLElement
+    const track = document.querySelector('.timeline__track') as HTMLElement
+    const firstDot = document.querySelector('.timeline-item--live .timeline-marker') as HTMLElement
+    const lastDot = document.querySelector('.timeline-item--later .timeline-marker') as HTMLElement
+
+    if (!timeline || !track || !firstDot || !lastDot) return
+
+    const timelineRect = timeline.getBoundingClientRect()
+    const firstDotRect = firstDot.getBoundingClientRect()
+    const lastDotRect = lastDot.getBoundingClientRect()
+
+    const topOffset = firstDotRect.top + firstDotRect.height / 2 - timelineRect.top
+    const bottomOffset = timelineRect.bottom - (lastDotRect.top + lastDotRect.height / 2)
+
+    track.style.top = `${topOffset}px`
+    track.style.bottom = `${bottomOffset}px`
+  }
+
+  // ── Scroll-driven progress: line fill + item reveal ────
+  const updateProgress = () => {
+    const track = document.querySelector('.timeline__track') as HTMLElement
+    const fill = document.querySelector('.timeline__track-fill') as HTMLElement
+    if (!track || !fill) return
+
+    // Imaginary line sa viewport. Pag naabot ito ng dot, lalabas na siya.
+    const triggerY = window.innerHeight * 0.65
+
+    const rect = track.getBoundingClientRect()
+    const progress = Math.min(Math.max((triggerY - rect.top) / rect.height, 0), 1)
+    fill.style.height = `${progress * 100}%`
+
+    document.querySelectorAll('.timeline-item').forEach((item, i) => {
+      if (item.classList.contains('is-visible')) return
+
+      // Una (Now): lalabas agad pag pumasok ang timeline sa screen
+      if (i === 0) {
+        if (item.getBoundingClientRect().top <= window.innerHeight * 0.9) {
+          item.classList.add('is-visible')
+        }
+        return
+      }
+
+      const marker = item.querySelector('.timeline-marker') as HTMLElement
+      const r = marker.getBoundingClientRect()
+      if (r.top + r.height / 2 <= triggerY) item.classList.add('is-visible')
+    })
+  }
+
+  let ticking = false
+  const onScroll = () => {
+    if (ticking) return
+    ticking = true
+    requestAnimationFrame(() => {
+      updateProgress()
+      ticking = false
+    })
+  }
+
+  const onResize = () => {
+    measureTrack()
+    updateProgress()
+  }
+
+  measureTrack()
+  updateProgress()
+  window.addEventListener('scroll', onScroll, { passive: true })
+  window.addEventListener('resize', onResize)
+
+  return () => {
+    panelObs.disconnect()
+    window.removeEventListener('scroll', onScroll)
+    window.removeEventListener('resize', onResize)
+  }
+}, [])
 
   const scrollTo = (id: string) => document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' })
 
@@ -49,20 +130,38 @@ function Home() {
             <div className="hero-flex">
               <div className="hero-text">
                 <h1>Sigurado Ka Sa Bawat Tawid Mo</h1>
-                <p>Stop guessing ferry times. Get live schedules, sea advisories, and instant port updates on your phone.</p>
+                <p>
+                  Check ferry schedules, sea conditions, and important port updates
+                  before heading to the terminal. Travel with more confidence with Tawid.
+                </p>
                 <div className="app-badges">
-                  <a className="app-badge disabled"><i className="fab fa-google-play"></i><div><small>COMING SOON</small>Google Play</div></a>
-                  <a className="app-badge disabled"><i className="fab fa-app-store"></i><div><small>COMING SOON</small>App Store</div></a>
+                  <span className="app-badge disabled">
+                    <i className="fab fa-google-play" aria-hidden="true"></i>
+                    <div><small>Coming soon</small>Google Play</div>
+                  </span>
+                  <span className="app-badge disabled">
+                    <i className="fab fa-app-store" aria-hidden="true"></i>
+                    <div><small>Coming soon</small>App Store</div>
+                  </span>
                 </div>
               </div>
+
               <div className="hero-illustration-wrapper">
                 <img src={welcomeSvg} alt="Welcome aboard" className="hero-illustration" />
               </div>
             </div>
           </div>
-          <div className="scroll-down" onClick={() => scrollTo('#features')}>
+
+          <div
+            className="scroll-down"
+            onClick={() => scrollTo('#features')}
+            role="button"
+            tabIndex={0}
+            onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && scrollTo('#features')}
+            aria-label="Scroll to features"
+          >
             <span>Scroll</span>
-            <i className="fas fa-chevron-down"></i>
+            <i className="fas fa-chevron-down" aria-hidden="true"></i>
           </div>
         </section>
 
@@ -70,109 +169,41 @@ function Home() {
         <section className="section" id="features">
           <div className="container">
             <div className="panel fade-up">
-              <div className="section-title">
-                <h2>Know Before You Go</h2>
-                <p>Live schedule, sea condition, and advisories — all in one app.</p>
-              </div>
-              <div className="grid-3">
-                {FEATURES.map(f => (
-                  <div className="item" key={f.num}>
-                    <span className="item-num">{f.num}</span>
-                    <i className={`fas ${f.icon} item-icon`}></i>
-                    <h3>{f.title}</h3>
-                    <p>{f.desc}</p>
+              <SectionHead
+                title="Know Before You Go"
+                sub="Live schedule, sea condition, and advisories. All in one app."
+              />
+
+              <div className="features-list">
+                {FEATURES.map((f, i) => (
+                  <div
+                    className={`feature-row ${i % 2 === 1 ? 'feature-row--reverse' : ''}`}
+                    key={f.title}
+                  >
+                    <span className="feature-row__watermark" aria-hidden="true">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+
+                    <div className="feature-row__text">
+                      <div className="feature-row__icon">
+                        <i className={`fas ${f.icon}`} aria-hidden="true"></i>
+                      </div>
+                      <h3 className="feature-row__title">{f.title}</h3>
+                      <p className="feature-row__desc">{f.desc}</p>
+                    </div>
+
+                    <div className="feature-row__visual">
+                      <img
+                        src={f.img}
+                        alt={`${f.title} screenshot`}
+                        loading="lazy"
+                        decoding="async"
+                        className="feature-row__img"
+                      />
+                    </div>
                   </div>
                 ))}
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* BOOKING */}
-        <section className="section" id="booking">
-          <div className="container">
-            <div className="panel panel-center fade-up">
-              <h2>Book Ahead & Pay Cashless</h2>
-              <div style={{ display: 'inline-block', background: 'rgba(0,109,101,.08)', color: '#006d65', padding: '4px 16px', borderRadius: 40, fontSize: '.7rem', fontWeight: 600, marginBottom: 12, border: '1px solid rgba(0,109,101,.12)' }}>
-                <i className="fas fa-clock" style={{ marginRight: 4 }}></i>Available Upon Port Activation
-              </div>
-              <p style={{ maxWidth: 560, margin: '0 auto 12px' }}>Book tickets ahead and pay cashless once your port activates Tawid. Walk-in still available.</p>
-              <div className="pills brand-pills" style={{ marginBottom: 16 }}>
-                {['Skip the line', 'Cashless', 'Digital receipt', 'Less cash'].map((t, i) => (
-                  <div className="pill" key={t}><i className={`fas ${['fa-forward', 'fa-wallet', 'fa-receipt', 'fa-shield-alt'][i]}`}></i><span><strong>{t}</strong></span></div>
-                ))}
-              </div>
-              <div className="note-dark" style={{ padding: '14px 20px' }}>
-                <i className="fas fa-heart"></i><strong>We love cashless.</strong> A simple step toward modern travel.
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* PRICING */}
-        <section className="section" id="pricing">
-          <div className="container">
-            <div className="panel fade-up">
-              <div className="section-title">
-                <h2>Pricing for Passengers</h2>
-                <p>No hidden charges for walk-ins. Small convenience fee for online booking.</p>
-              </div>
-              
-              <div className="pricing-row">
-                {/* WALK-IN CARD */}
-                <div className="item price-card">
-                  <h3>Walk-In</h3>
-                  <p className="price">Standard Fare Only</p>
-                  <p className="price-sub">Pay regular ticket price at port counter</p>
-                  <hr />
-                  <ul>
-                    {[
-                      'Queue at the ticket counter',
-                      'Cash payment only',
-                      'Available on all active routes',
-                      'No smartphone or app required'
-                    ].map(t => (
-                      <li key={t}><i className="fas fa-check-circle"></i> {t}</li>
-                    ))}
-                    {[
-                      'No seat guarantee ahead of time',
-                      'No digital receipt / SMS ticket',
-                      'Longer wait times during peak hours'
-                    ].map(t => (
-                      <li key={t} className="no"><i className="fas fa-times-circle"></i> {t}</li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* ONLINE BOOKING CARD */}
-                <div className="item price-card price-premium">
-                  <h3>Online Booking</h3>
-                  <p className="price">Standard Fare + 1.7%</p>
-                  <p className="price-sub">Convenience fee for digital ticketing</p>
-                  <p className="price-note"><i className="fas fa-info-circle"></i> Available after port activation</p>
-                  <hr />
-                  <ul>
-                    {[
-                      ['fa-forward', 'Skip the counter line'],
-                      ['fa-wallet', 'Cashless payment (GCash / Maya)'],
-                      ['fa-receipt', 'Instant digital receipt'],
-                      ['fa-leaf', '100% Paperless & Eco-friendly'], // IDINAGDAG DITO
-                      ['fa-chair', 'Guaranteed seat allocation'],
-                      ['fa-calendar-check', 'Advance trip reservation'],
-                      ['fa-qrcode', 'QR code mobile ticket']
-                    ].map(([icon, text]) => (
-                      <li key={text}><i className={`fas ${icon}`}></i> {text}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              {/* CARBON FOOTPRINT / ECO-NOTE BANNER */}
-              <div className="note-dark" style={{ marginTop: 24, padding: '14px 20px', textAlign: 'center' }}>
-                <i className="fas fa-leaf" style={{ color: '#2ecc71', marginRight: 8 }}></i>
-                <strong>Go paperless, save trees.</strong> Digital QR tickets help reduce paper waste and lower our carbon footprint with every trip.
-              </div>
-
             </div>
           </div>
         </section>
@@ -181,26 +212,119 @@ function Home() {
         <section className="section" id="partnership">
           <div className="container">
             <div className="panel fade-up">
-              <div className="section-title">
-                <h2>LGU Partnership</h2>
-                <p>No complex procurement. Just a smartphone + QR system for municipal ports.</p>
+              <SectionHead
+                title="LGU Partnership"
+                sub="No complex procurement. Once activated with Tawid, we will assign authorized staff from your port to start posting schedules right away."
+              />
+
+              <div className="free-banner">
+                <p className="free-banner__title">
+                  <i className="fas fa-gem" aria-hidden="true"></i> Start with Tawid for Free
+                </p>
+                <p className="free-banner__sub">No setup fees. No monthly fees. Post schedules right away.</p>
               </div>
-              <div style={{ background: 'linear-gradient(135deg,#006d65,#40E0D0)', color: '#fff', padding: '24px 28px', borderRadius: 16, textAlign: 'center', marginBottom: 32, boxShadow: '0 4px 20px rgba(0,109,101,.2)' }}>
-                <p style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: 4 }}><i className="fas fa-gem" style={{ marginRight: 12 }}></i>Zero Cost for LGUs</p>
-                <p style={{ margin: 0, opacity: .92 }}>₱0 setup · ₱0 monthly · <strong>100% free</strong></p>
-              </div>
+
               <div className="grid-3">
                 {LGU_FEATURES.map(f => (
                   <div className="item" key={f.title}>
-                    <i className={`fas ${f.icon} item-icon`}></i>
+                    <div className="item-header">
+                      <i className={`fas ${f.icon} item-icon`} aria-hidden="true"></i>
+                      <span className={`status-pill status-pill--${f.status}`}>
+                        {f.status === 'ready' ? 'Ready to use' : 'Coming soon'}
+                      </span>
+                    </div>
                     <h3>{f.title}</h3>
                     <p>{f.desc}</p>
                   </div>
                 ))}
               </div>
-              <p style={{ textAlign: 'center', marginTop: 28, color: '#006d65' }}>
-                Ready to partner? <span onClick={() => scrollTo('#contacts')} style={{ fontWeight: 700, textDecoration: 'underline', cursor: 'pointer' }}>Contact us</span>
+
+              <p className="partnership-cta">
+                Ready to partner?{' '}
+                <button type="button" className="link-btn" onClick={() => scrollTo('#contacts')}>
+                  Contact us
+                </button>
               </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ROADMAP */}
+        <section className="section" id="roadmap">
+          <div className="container">
+            <div className="panel fade-up">
+              <SectionHead
+                title="What's Next for Tawid"
+                sub="See what's live now and what's coming to your port."
+              />
+
+              <div className="timeline">
+                <div className="timeline__track" aria-hidden="true">
+                  <div className="timeline__track-fill" />
+                </div>
+
+                {ROADMAP.map((r, i) => (
+                  <div
+                    className={`timeline-item timeline-item--${r.status} ${i % 2 === 0 ? 'timeline-item--left' : 'timeline-item--right'}`}
+                    key={r.phase}
+                  >
+                    <div className="timeline-marker">
+                      <div className="timeline-dot">
+                        {r.status === 'live' && <i className="fas fa-check" aria-hidden="true"></i>}
+                      </div>
+                    </div>
+
+                    <div className="timeline-card">
+                      <header className="timeline-card__head">
+                        <span className="timeline-card__phase">{r.phase}</span>
+                        <span className="timeline-card__badge">{r.label}</span>
+                      </header>
+
+                      {r.split && r.groups ? (
+                        <div className="timeline-stack">
+                          {r.groups.map(group => (
+                            <div className="timeline-stack__group" key={group.title}>
+                              <div className="timeline-stack__title">
+                                <i className={`fas ${group.icon}`} aria-hidden="true"></i>
+                                <span>{group.title}</span>
+                              </div>
+                              <ul className="timeline-list">
+                                {group.items.map(item => (
+                                  <li key={item}>
+                                    <i className="fas fa-check-circle" aria-hidden="true"></i>
+                                    <span>{item}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <ul className="timeline-list">
+                          {r.items?.map(item => (
+                            <li key={item}>
+                              <i
+                                className={`fas ${r.status === 'live' ? 'fa-check-circle' : 'fa-circle'}`}
+                                aria-hidden="true"
+                              ></i>
+                              <span>{item}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="roadmap-note">
+                <i className="fas fa-info-circle" aria-hidden="true"></i>
+                <div>
+                  <strong>About pricing:</strong> Walk-in fares stay the same everywhere. No hidden
+                  charges. A small convenience fee will apply to online booking once it becomes
+                  available at partner ports.
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -209,22 +333,26 @@ function Home() {
         <section className="section" id="about">
           <div className="container">
             <div className="panel fade-up">
-              <div className="section-title"><h2>About the Company</h2></div>
+              <SectionHead title="About LOOKAL" />
               <div className="about">
                 <div className="about-logo">
                   <div className="company-name">LOOKAL</div>
-                  <div className="company-legal">SOFTWARE DEVELOPMENT SERVICES</div>
+                  <div className="company-legal">Software Development Services</div>
                   <div className="badge-stack">
-                    <span className="badge"><i className="fas fa-certificate"></i> DTI Registered</span>
-                    <span className="badge"><i className="fas fa-file-invoice"></i> BIR Compliant</span>
+                    <span className="badge"><i className="fas fa-certificate" aria-hidden="true"></i> DTI Registered</span>
+                    <span className="badge"><i className="fas fa-file-invoice" aria-hidden="true"></i> BIR Compliant</span>
                   </div>
                 </div>
+
                 <div className="about-text">
-                  <p>We build digital platforms that solve real problems for Filipino communities.</p>
-                  <p><strong>Tawid</strong> is our in-house port information & booking system for municipal ports.</p>
+                  {ABOUT_PARAS.map((p, i) => (
+                    <p key={i} className={i === 0 ? 'about-lead' : undefined}>{p}</p>
+                  ))}
                   <div className="tags">
-                    {['Software Development', 'Mobile Applications', 'Local Community'].map((t, i) => (
-                      <span className="badge" key={t}><i className={`fas ${['fa-code', 'fa-mobile-alt', 'fa-users'][i]}`}></i> {t}</span>
+                    {ABOUT_TAGS.map(([icon, t]) => (
+                      <span className="badge" key={t}>
+                        <i className={`fas ${icon}`} aria-hidden="true"></i> {t}
+                      </span>
                     ))}
                   </div>
                 </div>
@@ -237,14 +365,17 @@ function Home() {
         <section className="section" id="contacts">
           <div className="container">
             <div className="panel panel-center fade-up">
-              <div className="section-title">
-                <h2>Get in Touch</h2>
-                <p>We’d love to hear from you</p>
-              </div>
+              <SectionHead title="Get in Touch" sub="We'd love to hear from you" />
               <div className="contact-btns">
-                <a href="https://m.me/tawidApp" target="_blank" rel="noreferrer" className="btn btn-fb"><i className="fab fa-facebook-messenger"></i> Messenger</a>
-                <a href="https://wa.me/639305811497" target="_blank" rel="noreferrer" className="btn btn-wa"><i className="fab fa-whatsapp"></i> WhatsApp</a>
-                <a href="mailto:tawidapp@gmail.com" className="btn btn-email"><i className="fas fa-envelope"></i> Email</a>
+                <a href="https://m.me/tawidApp" target="_blank" rel="noreferrer" className="btn btn-fb">
+                  <i className="fab fa-facebook-messenger" aria-hidden="true"></i> Messenger
+                </a>
+                <a href="https://wa.me/639305811497" target="_blank" rel="noreferrer" className="btn btn-wa">
+                  <i className="fab fa-whatsapp" aria-hidden="true"></i> WhatsApp
+                </a>
+                <a href="mailto:tawidapp@gmail.com" className="btn btn-email">
+                  <i className="fas fa-envelope" aria-hidden="true"></i> Email
+                </a>
               </div>
             </div>
           </div>
@@ -253,5 +384,3 @@ function Home() {
     </>
   )
 }
-
-export default Home
