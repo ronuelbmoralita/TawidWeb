@@ -11,6 +11,7 @@
   .scroll-down,
   .wave-bg svg,
   .timeline-card,
+  .page-enter,
   .timeline-item--soon .timeline-dot {
     animation: none !important;
   }

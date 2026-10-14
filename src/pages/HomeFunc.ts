@@ -3,10 +3,10 @@
    ============================================================ */
 
 // ── Image imports ──────────────────────────────────────────
-import homeImg from '../assets/heroHome.png'
-import imgNotification from '../assets/heroNotification.png'
-import heroDeparture from '../assets/heroDeparture.png'
-import heroSea from '../assets/heroSea.png'
+import imgHome from '../assets/imgHome.png'
+import imgNotification from '../assets/imgNotification.png'
+import imgDeparture from '../assets/imgDeparture.png'
+import imgSea from '../assets/imgSea.png'
 
 // Kung may iba pang screenshots sa assets:
 // import scheduleImg from '../assets/schedule.png'
@@ -54,13 +54,13 @@ export const FEATURES: readonly Feature[] = [
         icon: 'fa-calendar-alt',
         title: "See what's sailing today",
         desc: 'Live trip schedule, vessel name, and sailing status. No more checking social media.',
-        img: homeImg
+        img: imgHome
     },
     {
         icon: 'fa-water',
         title: 'Know the sea conditions',
         desc: 'Sea condition (Calm to Very Rough) with wave height to help you plan better.',
-        img: heroSea
+        img: imgSea
     },
     {
         icon: 'fa-bullhorn',
@@ -72,7 +72,7 @@ export const FEATURES: readonly Feature[] = [
         icon: 'fa-bell',
         title: 'Never miss your boat',
         desc: 'Reminder 30 minutes before departure so you never miss your sailing.',
-        img: heroDeparture
+        img: imgDeparture
     }
 ] as const
 

@@ -1,12 +1,16 @@
 import { useState, useEffect, useRef } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import tawidLogo from '../assets/tawid.svg'
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const location = useLocation()
+  const navigate = useNavigate()
   const menuRef = useRef<HTMLDivElement>(null)
   const toggleRef = useRef<HTMLButtonElement>(null)
+
+  // Section na ii-scroll pagkatapos mag-navigate pabalik sa Home
+  const pendingHash = useRef<string | null>(null)
 
   const close = () => setIsOpen(false)
   const toggle = () => setIsOpen(v => !v)
@@ -39,6 +43,18 @@ function Navbar() {
     return () => { document.body.style.overflow = '' }
   }, [isOpen])
 
+  // Pagbalik sa Home galing ibang page: i-scroll sa napiling section
+  useEffect(() => {
+    if (location.pathname !== '/' || !pendingHash.current) return
+    const hash = pendingHash.current
+    // Konting delay para mag-render muna ang Home at matapos ang ScrollToTop
+    const t = setTimeout(() => {
+      document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth' })
+      pendingHash.current = null
+    }, 60)
+    return () => clearTimeout(t)
+  }, [location.pathname])
+
   const links = [
     { name: 'Home', hash: '#home' },
     { name: 'Features', hash: '#features' },
@@ -47,9 +63,13 @@ function Navbar() {
     { name: 'About', hash: '#about' },
   ]
 
-  const handleClick = (hash: string) => {
+  const handleClick = (e: React.MouseEvent, hash: string) => {
+    e.preventDefault()
     if (location.pathname === '/') {
       document.querySelector(hash)?.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      pendingHash.current = hash
+      navigate('/')
     }
     close()
   }
@@ -81,7 +101,7 @@ function Navbar() {
             <div className="menu-backdrop" onClick={close} aria-hidden="true" />
             <div className="nav-links" id="primary-nav">
               {links.map(link => (
-                <Link key={link.name} to="/" onClick={() => handleClick(link.hash)}>
+                <Link key={link.name} to="/" onClick={e => handleClick(e, link.hash)}>
                   {link.name}
                 </Link>
               ))}
@@ -89,7 +109,7 @@ function Navbar() {
               <Link
                 to="/"
                 className="nav-cta"
-                onClick={() => handleClick('#contacts')}
+                onClick={e => handleClick(e, '#contacts')}
               >
                 Get in touch
                 <i className="fas fa-arrow-right" aria-hidden="true"></i>
