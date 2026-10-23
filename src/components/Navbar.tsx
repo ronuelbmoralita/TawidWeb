@@ -91,7 +91,11 @@ function Navbar() {
             aria-expanded={isOpen}
             aria-controls="primary-nav"
           >
-            <i className={`fas ${isOpen ? 'fa-times' : 'fa-bars'}`} aria-hidden="true" />
+            <span className="burger" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </span>
           </button>
 
           <div
