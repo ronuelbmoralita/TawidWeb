@@ -35,7 +35,7 @@
     color: var(--brand-deep);
     border: 1px solid var(--brand-dark);
     border-radius: 12px;
-    padding: 10px 12px;
+    padding: 15px 14px;
     font-size: 22px;
     line-height: 1;
     box-shadow: 0 4px 14px rgba(64, 224, 208, 0.45);
@@ -73,7 +73,7 @@
     transform: translateY(-6.75px) rotate(-45deg);
   }
 
-  nav { padding: 6px 0; }
+  nav { padding: 10px 0; }
   .logo-img { height: 20px; }
 
   .mobile-menu-container {
@@ -312,7 +312,7 @@
   }
 
   .grid-3, .grid-4 { grid-template-columns: 1fr; }
-  nav { padding: 0; }
+  nav { padding: 10px 0; }
   .logo-img { height: 20px; }
   .logo { font-size: 15px; gap: 6px; }
   .hero { padding: 40px 0; }
