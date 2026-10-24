@@ -131,8 +131,7 @@ export default function Home() {
               <div className="hero-text">
                 <h1>Sigurado Ka Sa Bawat Tawid Mo</h1>
                 <p>
-                  Check ferry schedules, sea conditions, and important port updates
-                  before heading to the terminal. Travel with more confidence with Tawid.
+                  Check ferry schedules, sea conditions, and important port updates before you go. Plan your trip with confidence using Tawid.
                 </p>
                 <div className="app-badges">
                   <span className="app-badge disabled">
